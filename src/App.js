@@ -39,6 +39,7 @@ class App extends Component {
           ) : (
             ALPHABET.map((letter) => (
               <Letter
+                key={letter}
                 letter={letter}
                 usedLetters={usedLetters}
                 onClick={this.handleLetter}
