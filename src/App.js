@@ -1,35 +1,41 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import './App.css'
-import Letter from './Letter'
+import "./App.css";
+import Letter from "./Letter";
+import Counter from "./Counter";
 
 const HIDDEN_CHAR = "_";
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const WORDS = `WORD TEST REACT GREAT SUPER`.trim().split(" ");
 
 class App extends Component {
-  state = this.generateInitialState()
+  state = this.generateInitialState();
 
   generateInitialState() {
-    const word = WORDS[Math.floor(Math.random() * WORDS.length)]
-    const usedLetters = new Set()
-    const display = computeDisplay(word, usedLetters)
+    const usedLetters = new Set();
+    const word = WORDS[Math.floor(Math.random() * WORDS.length)];
+    const display = computeDisplay(word, usedLetters);
+    const attempts = 0;
 
-    return { word, display, usedLetters, won: false }
+    return { usedLetters, word, display, attempts, won: false };
   }
 
-  handleLetter = letter => {
-    let { word, display, usedLetters } = this.state
-    usedLetters.add(letter)
-    display = computeDisplay(word, usedLetters)
-    const won = !display.includes(HIDDEN_CHAR)
-    this.setState({ display, usedLetters, won })
-  }
+  handleLetter = (letter) => {
+    let { usedLetters, word, display, attempts } = this.state;
+    if (!word.includes(letter)) {
+      attempts = attempts + 1;
+    }
+    usedLetters.add(letter);
+    display = computeDisplay(word, usedLetters);
+    const won = !display.includes(HIDDEN_CHAR);
+    this.setState({ usedLetters, display, attempts, won });
+  };
 
   render() {
-    const { display, usedLetters, won } = this.state
+    const { usedLetters, display, attempts, won } = this.state;
     return (
       <div className={`hangman ${(won && "won") || ""}`}>
+        <Counter attempts={attempts} />
         <p className="display">{display}</p>
         <p className="letters">
           {won ? (
@@ -52,11 +58,11 @@ class App extends Component {
   }
 
   reset() {
-    this.setState(this.generateInitialState())
+    this.setState(this.generateInitialState());
   }
 }
 
-export default App
+export default App;
 
 function computeDisplay(word, usedLetters) {
   return word.replace(/\w/g, (letter) =>

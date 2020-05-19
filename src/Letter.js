@@ -1,12 +1,9 @@
-import React from 'react'
+import React from "react";
 
 const Letter = ({ letter, usedLetters, onClick }) => (
-  <button
-    disabled={usedLetters.has(letter)}
-    onClick={() => onClick(letter)}
-  >
+  <button disabled={usedLetters.has(letter)} onClick={() => onClick(letter)}>
     {letter}
   </button>
 );
 
-export default Letter
+export default Letter;
