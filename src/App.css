@@ -53,10 +53,16 @@ body {
   color: green;
 }
 
+.hangman.hanged .display {
+  color: red;
+}
+
+.hangman.hanged .letters,
 .hangman.won .letters {
   justify-content: space-around;
 }
 
+.hangman.hanged .letters button:not(.retry),
 .hangman.won .letters button:not(.replay) {
   border-color: #dfd;
   color: #dfd;
@@ -74,4 +80,17 @@ body {
 .hangman.won .letters button.replay:active {
   color: white;
   background: green;
+}
+
+.hangman.hanged .letters button.retry {
+  width: auto;
+  border-color: red;
+  color: red;
+  padding: 0.2em 1em;
+}
+
+.hangman.hanged .letters button.retry:hover,
+.hangman.hanged .letters button.retry:active {
+  color: white;
+  background: red;
 }

@@ -4,9 +4,10 @@ import "./App.css";
 import Letter from "./Letter";
 import Counter from "./Counter";
 
+const LIMIT = 6;
 const HIDDEN_CHAR = "_";
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const WORDS = `WORD TEST REACT GREAT SUPER`.trim().split(" ");
+const WORDS = `REACT COMPONENT JEST CHAI ENZYME SNAPSHOT`.trim().split(" ");
 
 class App extends Component {
   state = this.generateInitialState();
@@ -17,7 +18,7 @@ class App extends Component {
     const display = computeDisplay(word, usedLetters);
     const attempts = 0;
 
-    return { usedLetters, word, display, attempts, won: false };
+    return { usedLetters, word, display, attempts, hanged: false, won: false };
   }
 
   handleLetter = (letter) => {
@@ -28,29 +29,54 @@ class App extends Component {
     usedLetters.add(letter);
     display = computeDisplay(word, usedLetters);
     const won = !display.includes(HIDDEN_CHAR);
-    this.setState({ usedLetters, display, attempts, won });
+    const hanged = attempts >= LIMIT;
+    this.setState({ usedLetters, display, attempts, hanged, won });
   };
 
+  handleKeyPress = (event) => {
+    this.handleLetter(event.key.toUpperCase());
+  };
+
+  componentDidMount() {
+    document.addEventListener("keypress", this.handleKeyPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keypress", this.handleKeyPress);
+  }
+
   render() {
-    const { usedLetters, display, attempts, won } = this.state;
+    const { usedLetters, display, attempts, hanged, won } = this.state;
     return (
-      <div className={`hangman ${(won && "won") || ""}`}>
+      <div
+        className={`hangman ${(hanged && "hanged") || ""} ${
+          (won && "won") || ""
+        }`}
+      >
         <Counter attempts={attempts} />
         <p className="display">{display}</p>
         <p className="letters">
-          {won ? (
-            <button className="replay" onClick={() => this.reset()}>
-              New Game
+          {hanged ? (
+            <button className="retry" onClick={() => this.reset()}>
+              Retry
             </button>
           ) : (
-            ALPHABET.map((letter) => (
-              <Letter
-                key={letter}
-                letter={letter}
-                usedLetters={usedLetters}
-                onClick={this.handleLetter}
-              />
-            ))
+            [
+              won ? (
+                <button className="replay" onClick={() => this.reset()}>
+                  New Game
+                </button>
+              ) : (
+                ALPHABET.map((letter) => (
+                  <Letter
+                    key={letter}
+                    letter={letter}
+                    usedLetters={usedLetters}
+                    onClick={this.handleLetter}
+                  />
+                ))
+              ),
+            ]
           )}
         </p>
       </div>
