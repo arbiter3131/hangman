@@ -56,28 +56,29 @@ class App extends Component {
         <Counter attempts={attempts} />
         <p className="display">{display}</p>
         <p className="letters">
-          {hanged ? (
-            <button className="retry" onClick={() => this.reset()}>
-              Retry
-            </button>
-          ) : (
-            [
-              won ? (
-                <button className="replay" onClick={() => this.reset()}>
-                  New Game
+          {hanged
+            ? (document.removeEventListener("keypress", this.handleKeyPress),
+              (
+                <button className="retry" onClick={() => this.reset()}>
+                  Retry
                 </button>
-              ) : (
-                ALPHABET.map((letter) => (
-                  <Letter
-                    key={letter}
-                    letter={letter}
-                    usedLetters={usedLetters}
-                    onClick={this.handleLetter}
-                  />
-                ))
-              ),
-            ]
-          )}
+              ))
+            : [
+                won ? (
+                  <button className="replay" onClick={() => this.reset()}>
+                    New Game
+                  </button>
+                ) : (
+                  ALPHABET.map((letter) => (
+                    <Letter
+                      key={letter}
+                      letter={letter}
+                      usedLetters={usedLetters}
+                      onClick={this.handleLetter}
+                    />
+                  ))
+                ),
+              ]}
         </p>
       </div>
     );
